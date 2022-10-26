@@ -7,6 +7,7 @@ I want to version this project's planning along with its sources as an experimen
 
 Let's jot done some unrefined ideas:
 - [x] Add basic usage and setup instructions.
+- [ ] Enrich CI with format and lint checks (yes procrastinating the next "feature").
 - [ ] TDD or die (I normally don't do it because if feels like a huge energy drain).
 - [ ] Open markdown file when you click on the corresponding node in the mind map.
 - [ ] Acceptable theme for the mind map.
