@@ -33,14 +33,14 @@ def task():
     while True:
         for event in i.event_gen(yield_nones=False):
             (_, type_names, path, filename) = event
-            if 'IN_CLOSE_WRITE' in type_names:
-                log.debug(f'File {path}/{filename} was modified')
-                socketio.emit('graph', get_graph(_markdown_root))
+            if "IN_CLOSE_WRITE" in type_names:
+                log.debug(f"File {path}/{filename} was modified")
+                socketio.emit("graph", get_graph(_markdown_root))
                 break
         time.sleep(0.2)
 
 
-@app.route('/graph')
+@app.route("/graph")
 def graph():
     """
     Rest endpoint that return a graph of the markdown files in the root directory
@@ -52,17 +52,16 @@ def graph():
 
 @socketio.event
 def my_event(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': message['data'], 'count': session['receive_count']})
+    session["receive_count"] = session.get("receive_count", 0) + 1
+    emit("my_response", {"data": message["data"], "count": session["receive_count"]})
 
 
 @socketio.on("connect")
 def connect():
     log.debug(request.sid)
     log.debug("Client connected")
-    assert _markdown_root.is_dir, f'{_markdown_root} is not a directory'
-    emit('graph', get_graph(_markdown_root))
+    assert _markdown_root.is_dir, f"{_markdown_root} is not a directory"
+    emit("graph", get_graph(_markdown_root))
 
 
 @socketio.on("disconnect")
@@ -72,14 +71,16 @@ def disconnected():
     emit("disconnect", f"user {request.sid} disconnected", broadcast=True)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Mind Map Markdown')
-    parser.add_argument('--root-dir', type=Path, required=True)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Mind Map Markdown")
+    parser.add_argument("--root-dir", type=Path, required=True)
     args = parser.parse_args()
 
     _markdown_root = args.root_dir.resolve().absolute()
-    assert _markdown_root.is_dir(), f'{_markdown_root} is not a directory'
-    assert _this_dir not in _markdown_root.parents, f"{_markdown_root} can't be a subdirectory of project root"
+    assert _markdown_root.is_dir(), f"{_markdown_root} is not a directory"
+    assert (
+        _this_dir not in _markdown_root.parents
+    ), f"{_markdown_root} can't be a subdirectory of project root"
 
     thread = Thread(target=task)
     thread.start()

@@ -35,3 +35,14 @@ yarn start
 
 Your default browser should show the mind map:
 ![img.png](docs/img.png)
+
+
+## CI
+I opted to use [pre-commit](https://pre-commit.com/) instead of a github pipeline for now because it seems my runner would be exposed for repo forks for instance. I haven't looked into it yet.
+
+Anyway to use git hooks you need to install the pre-commit package:
+```bash
+pip install pre-commit
+pre-commit install
+# et voila
+```
