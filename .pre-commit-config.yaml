@@ -19,3 +19,7 @@ repos:
     rev: main
     hooks:
       - id: prettier
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: main
+    hooks:
+      - id: eslint
