@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Dict, Union
 
 import marko
-import matplotlib.pyplot as plt
 import networkx as nx
 from bs4 import BeautifulSoup as Soup, PageElement
 
@@ -52,6 +51,7 @@ def traverse_soup_by_name(
 
 
 def get_graph(root_dir: Path) -> dict:
+    assert root_dir.is_dir(), f"{root_dir} is not a directory"
     g = nx.Graph()
     stew = get_stew(root_dir)
     traverse_soup_by_name(root_dir, stew, g)
@@ -70,30 +70,3 @@ def get_graph(root_dir: Path) -> dict:
     for e in g.edges:
         edges.append({"id": f"{len(edges)}", "source": e[0], "target": e[1]})
     return {"nodes": nodes, "edges": edges}
-
-
-if __name__ == "__main__":
-    g = nx.Graph()
-    node_map = {}
-    root = (Path(__file__).parents[1] / "example").absolute()
-    stew = get_stew(root)
-    traverse_soup_by_name(root, stew, g)
-    labels = nx.get_node_attributes(g, "label")
-    nx.draw_kamada_kawai(g, labels=labels, with_labels=True)
-    plt.show()
-
-    pos = nx.spring_layout(g)
-    # ret = json_graph.node_link_data(g)
-    nodes = []
-    for n in g.nodes:
-        nodes.append(
-            {
-                "id": n,
-                "data": {"label": labels[n]},
-                "position": {"x": pos[n][0], "y": pos[n][1]},
-            }
-        )
-    edges = []
-    for e in g.edges:
-        edges.append({"id": f"{len(edges)}", "source": e[0], "target": e[1]})
-    pass

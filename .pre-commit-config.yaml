@@ -23,3 +23,12 @@ repos:
     rev: main
     hooks:
       - id: eslint
+  # Crappy way to run pytest. I don't think I am supposed to do this.
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: bash -c "source ./backend/venv/bin/activate && cd backend && PYTHONPATH=. pytest tests"
+        language: system
+        pass_filenames: false
+        always_run: true

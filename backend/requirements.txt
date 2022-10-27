@@ -16,3 +16,4 @@ six==1.16.0
 soupsieve==2.3.2.post1
 Flask==2.2.2
 Flask-Cors==3.0.10
+pytest==7.2.0
