@@ -1,10 +1,14 @@
 # A
+
 ## AA
+
 ### AAA
+
 #### AAAA
-* a
-* b
-* c
+
+- a
+- b
+- c
 
 [b](b.md)
 
