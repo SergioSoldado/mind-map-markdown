@@ -8,9 +8,9 @@ I want to version this project's planning along with its sources as an experimen
 
 Let's jot done some unrefined ideas:
 
-- [x] Enrich CI with format and lint checks (yes procrastinating the next "feature").
-- [ ] TDD or die (I normally don't do it because if feels like a huge energy drain).
+- [x] TDD or die (I normally don't do it because if feels like a huge energy drain).
 - [ ] Open markdown file when you click on the corresponding node in the mind map.
+- [ ] Use docker for testing (local CI)
 - [ ] Acceptable theme for the mind map.
 - [ ] Some layout controls for the mind map.
 - [ ] Maybe make a plugin for VSCode to make it easier to use.
