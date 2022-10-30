@@ -42,8 +42,8 @@ function App() {
       console.log(data)
       const edges: Edge[] = data.edges
       const nodes: Node[] = data.nodes.map((node: Node) => {
-        node.position.x = 1000 + node.position.x * 1000
-        node.position.y = 1000 + node.position.y * 1000
+        node.position.x = 1000 + node.position.x * 500
+        node.position.y = 1000 + node.position.y * 500
         return node
       })
       setNodes(nodes)
@@ -97,7 +97,8 @@ function App() {
       fitViewOptions={fitViewOptions}
     >
       <Controls />
-      <Background color="#aaa" gap={16} />
+      {/*// @ts-ignore*/}
+      {/*<Background variant="dots" color="#000" gap={16} />*/}
     </ReactFlow>
   )
 }

@@ -62,7 +62,7 @@ def clicked():
             f_path = _markdown_root / node["id"]
             if f_path.is_file():
                 print(f"Opening {f_path}")
-                subprocess.call(f"code {f_path.absolute()}", shell=True)
+                subprocess.call(f"pycharm {f_path.absolute()}", shell=True)
             break
     return "", 201
 

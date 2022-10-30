@@ -56,7 +56,7 @@ def get_graph(root_dir: Path) -> dict:
     stew = get_stew(root_dir)
     traverse_soup_by_name(root_dir, stew, g)
     labels = nx.get_node_attributes(g, "label")
-    pos = nx.spring_layout(g, seed=0)
+    pos = nx.kamada_kawai_layout(G=g)
     nodes = []
     for n in g.nodes:
         nodes.append(
