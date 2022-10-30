@@ -1,16 +1,23 @@
 env:
   browser: true
   es2021: true
+plugins:
+  - react
+  - '@typescript-eslint'
+  - prettier
 extends:
   - eslint:recommended
   - plugin:react/recommended
   - plugin:@typescript-eslint/recommended
 overrides: []
-parser: "@typescript-eslint/parser"
+parser: '@typescript-eslint/parser'
 parserOptions:
   ecmaVersion: latest
+  ecmaFeatures:
+    jsx: true
   sourceType: module
-plugins:
-  - react
-  - "@typescript-eslint"
-rules: {}
+rules:
+  semi: [2, never]
+settings:
+  react:
+    version: 'detect'
