@@ -6,7 +6,7 @@ This is a tool to convert markdown files to a realtime mind map. Markdown has be
 
 I want to version this project's planning along with its sources as an experiment. It seems like a good idea to be using it as a test bed.
 
-- [ ] Open markdown file when you click on the corresponding node in the mind map.
+- [x] Open markdown file (in code for now) when you click on the corresponding node in the mind map.
 - [ ] Use docker for testing (local CI)
 - [ ] Acceptable theme for the mind map.
 - [ ] Some layout controls for the mind map.

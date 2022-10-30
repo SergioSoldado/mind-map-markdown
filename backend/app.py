@@ -1,11 +1,12 @@
 import argparse
 import logging
+import subprocess
 import time
 from pathlib import Path
 from threading import Thread
 
 import inotify.adapters
-from flask import Flask, session, request
+from flask import Flask, request
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 
@@ -50,16 +51,25 @@ def graph():
     return get_graph(_markdown_root)
 
 
-@socketio.event
-def my_event(message):
-    session["receive_count"] = session.get("receive_count", 0) + 1
-    emit("my_response", {"data": message["data"], "count": session["receive_count"]})
+@app.route("/onClick", methods=["POST"])
+def clicked():
+    content = request.json
+    print(f'Clicked on {content["id"]}')
+    g = get_graph(_markdown_root)
+    for node in g["nodes"]:
+        if node["id"] == content["id"]:
+            print(f'Found {node["id"]}')
+            f_path = _markdown_root / node["id"]
+            if f_path.is_file():
+                print(f"Opening {f_path}")
+                subprocess.call(f"code {f_path.absolute()}", shell=True)
+            break
+    return "", 201
 
 
 @socketio.on("connect")
 def connect():
-    log.debug(request.sid)
-    log.debug("Client connected")
+    log.debug(f"Client connected {request.sid}")
     assert _markdown_root.is_dir, f"{_markdown_root} is not a directory"
     emit("graph", get_graph(_markdown_root))
 
@@ -67,8 +77,8 @@ def connect():
 @socketio.on("disconnect")
 def disconnected():
     """event listener when client disconnects to the server"""
-    log.debug("user disconnected")
-    emit("disconnect", f"user {request.sid} disconnected", broadcast=True)
+    log.debug(f"Client disconnected {request.sid}")
+    # emit("disconnect", f"user {request.sid} disconnected", broadcast=True)
 
 
 if __name__ == "__main__":
@@ -84,4 +94,4 @@ if __name__ == "__main__":
 
     thread = Thread(target=task)
     thread.start()
-    socketio.run(app, debug=True, port=5000)
+    socketio.run(app, debug=False, port=5000, allow_unsafe_werkzeug=True)

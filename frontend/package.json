@@ -23,7 +23,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
+    "test": "react-scripts test --watchAll=false --transformIgnorePatterns 'node_modules/(?!axios)/'",
     "eject": "react-scripts eject",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
@@ -44,10 +44,12 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
+    "babel-jest": "^29.2.2",
     "eslint": "^8.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.10",
     "prettier": "^3.0.0-alpha.4",
-    "resize-observer-polyfill": "^1.5.1"
+    "resize-observer-polyfill": "^1.5.1",
+    "ts-jest": "^29.0.3"
   }
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useCallback, useEffect } from 'react'
 import ReactFlow, {
   addEdge,
+  Background,
   FitViewOptions,
   applyNodeChanges,
   applyEdgeChanges,
@@ -10,10 +11,12 @@ import ReactFlow, {
   NodeChange,
   EdgeChange,
   Connection,
+  Controls,
 } from 'reactflow'
+import axios from 'axios'
 import { io } from 'socket.io-client'
-import './App.css'
 import 'reactflow/dist/style.css'
+import './App.css'
 
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
@@ -24,7 +27,7 @@ function App() {
   const [edges, setEdges] = useState<Edge[]>([])
   useEffect(() => {
     const socket = io('localhost:5000/', {
-      reconnection: true,
+      // reconnection: true,
       // transports: ["websocket"]
     })
     socket.on('connect', () => {
@@ -46,7 +49,13 @@ function App() {
       setNodes(nodes)
       setEdges(edges)
     })
-  })
+
+    return () => {
+      socket.off('connect')
+      socket.off('disconnect')
+      socket.off('pong')
+    }
+  }, [])
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) =>
@@ -63,6 +72,18 @@ function App() {
     [setEdges]
   )
 
+  const onNodeClick = (event: React.MouseEvent, node: Node) => {
+    console.log(node)
+    axios
+      .post('http://localhost:5000/onClick', { id: node.id })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
   return (
     <ReactFlow
       className="App"
@@ -71,9 +92,13 @@ function App() {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
+      onNodeClick={onNodeClick}
       fitView
       fitViewOptions={fitViewOptions}
-    />
+    >
+      <Controls />
+      <Background color="#aaa" gap={16} />
+    </ReactFlow>
   )
 }
 

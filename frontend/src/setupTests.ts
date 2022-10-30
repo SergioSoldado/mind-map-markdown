@@ -5,5 +5,6 @@
 import '@testing-library/jest-dom'
 import * as ResizeObserverModule from 'resize-observer-polyfill'
 import { setImmediate } from 'timers'
+
 global.ResizeObserver = ResizeObserverModule.default
 global.setImmediate = setImmediate
