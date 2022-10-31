@@ -7,12 +7,20 @@ This is a tool to convert markdown files to a realtime mind map. Markdown has be
 I want to version this project's planning along with its sources as an experiment. It seems like a good idea to be using it as a test bed.
 
 - [x] Open markdown file (in code for now) when you click on the corresponding node in the mind map.
+- [x] Support clicking on markdown elements and opening file in that line
+- [ ] Support depth of markdown headers
+- [ ] Support click expand/collapse of markdown headers
+- [ ] Support auto resize of window (currently you have to click on "fit view" control)
+- [ ] Send back position to mind map when user clicks on a node and save that position
+- [ ] Start feeding back project documentation into the mind map (dunno what content it would have, maybe a features showcase)
+- [ ] Add button to set auto layout (dropdown with options)
+- [ ] Support other editors besides pycharm (all jetbrains?)
 - [ ] Use docker for testing (local CI)
 - [ ] Acceptable theme for the mind map.
-- [ ] Some layout controls for the mind map.
 - [ ] Maybe make a plugin for VSCode to make it easier to use.
 - [ ] Maybe use electron or native. I love KDE so maybe a KDE app.
 - [ ] Maybe support serialization of the mind map to github compatible format.
+- [ ] Maybe git history back'n'forth.
 
 ## Usage
 

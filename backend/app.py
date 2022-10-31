@@ -11,6 +11,7 @@ from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 
 from mmm.markdown import get_graph
+from mmm.util import find_line_in_file
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -54,15 +55,24 @@ def graph():
 @app.route("/onClick", methods=["POST"])
 def clicked():
     content = request.json
-    print(f'Clicked on {content["id"]}')
+    log.debug(f'Clicked on {content["id"]}')
     g = get_graph(_markdown_root)
     for node in g["nodes"]:
         if node["id"] == content["id"]:
-            print(f'Found {node["id"]}')
+            log.debug(f'Found {node["id"]}')
             f_path = _markdown_root / node["id"]
             if f_path.is_file():
-                print(f"Opening {f_path}")
+                log.debug(f"Opening {f_path}")
                 subprocess.call(f"pycharm {f_path.absolute()}", shell=True)
+            else:
+                file, line = content["id"].split("#")
+                f_path = _markdown_root / file
+                line = rf"^ *# *{line}"
+                line = find_line_in_file(f_path, line)
+                log.debug(f"Opening {f_path}:{line}")
+                subprocess.call(
+                    f"pycharm --line {line} {f_path.absolute()}", shell=True
+                )
             break
     return "", 201
 
