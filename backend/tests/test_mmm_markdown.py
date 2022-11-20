@@ -1,15 +1,17 @@
-import pytest
+import networkx as nx
+import matplotlib.pyplot as plt
 from pathlib import Path
-from mmm.markdown import get_graph
-
-
-def test_get_graph_bad_path():
-    with pytest.raises(AssertionError):
-        get_graph(Path("bad_path"))
+from mmm.markdown import make_graph, graph_to_react_flow
 
 
 def test_get_graph_valid_dir():
-    g = get_graph(Path(__file__).parent / "example")
-    assert "nodes" in g
-    assert "edges" in g
-    assert len(g["nodes"]) > 7
+    g = make_graph(Path(__file__).parent / "example")
+    pos = nx.spring_layout(g)
+    labels = nx.get_node_attributes(g, "label")
+    nx.draw(g, pos, labels=labels, with_labels=True)
+    plt.show()
+
+    react_flow_graph = graph_to_react_flow(g)
+    assert len(react_flow_graph["nodes"]) > 7
+    assert "nodes" in react_flow_graph
+    assert "edges" in react_flow_graph

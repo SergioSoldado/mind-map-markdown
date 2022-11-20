@@ -8,4 +8,7 @@ def test_find_line_in_file():
     assert find_line_in_file(f_path, "# A") == 1
     assert find_line_in_file(f_path, "## AA") == 3
     assert find_line_in_file(f_path, "### AAA") == 5
-    assert find_line_in_file(f_path, "#### AAAA") == 7
+    assert find_line_in_file(f_path, "## AB") == 7
+    assert find_line_in_file(f_path, "### ABA") == 9
+    assert find_line_in_file(f_path, "### ABB") == 11
+    assert find_line_in_file(f_path, "#### AAAA") == 13

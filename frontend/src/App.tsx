@@ -2,7 +2,6 @@ import React from 'react'
 import { useState, useCallback, useEffect } from 'react'
 import ReactFlow, {
   addEdge,
-  Background,
   FitViewOptions,
   applyNodeChanges,
   applyEdgeChanges,
@@ -16,22 +15,42 @@ import ReactFlow, {
 import axios from 'axios'
 import { io } from 'socket.io-client'
 import 'reactflow/dist/style.css'
+import Slider from './components/Slider'
 import './App.css'
+
+import styled from 'styled-components'
+
+const FixMe = styled.div`
+  position: fixed;
+  right: 1rem;
+  bottom: 2rem;
+  z-index: 1000;
+`
 
 const fitViewOptions: FitViewOptions = {
   padding: 0.2,
 }
 
+interface GraphControls {
+  depth: number
+}
+
 function App() {
+  const [controls, setControls] = useState<GraphControls>({
+    depth: 2,
+  })
   const [nodes, setNodes] = useState<Node[]>([])
   const [edges, setEdges] = useState<Edge[]>([])
+
   useEffect(() => {
     const socket = io('localhost:5000/', {
       // reconnection: true,
       // transports: ["websocket"]
     })
+
     socket.on('connect', () => {
       console.log('Connected')
+      axios.post('http://localhost:5000/graph/controls', controls).then(null)
     })
 
     socket.on('disconnect', (data) => {
@@ -42,8 +61,8 @@ function App() {
       console.log(data)
       const edges: Edge[] = data.edges
       const nodes: Node[] = data.nodes.map((node: Node) => {
-        node.position.x = 1000 + node.position.x * 500
-        node.position.y = 1000 + node.position.y * 500
+        node.position.x = 2000 + node.position.x * 1500
+        node.position.y = 2000 + node.position.y * 1500
         return node
       })
       setNodes(nodes)
@@ -84,22 +103,36 @@ function App() {
       })
   }
 
+  const onSliderChange = (value: number) => {
+    console.log(value)
+    setControls({ ...controls, depth: value })
+  }
+
+  useEffect(() => {
+    axios.post('http://localhost:5000/graph/controls', controls).then(null)
+  }, [controls])
+
   return (
-    <ReactFlow
-      className="App"
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      onNodeClick={onNodeClick}
-      fitView
-      fitViewOptions={fitViewOptions}
-    >
-      <Controls />
-      {/*// @ts-ignore*/}
-      {/*<Background variant="dots" color="#000" gap={16} />*/}
-    </ReactFlow>
+    <>
+      <FixMe>
+        <Slider onEvent={onSliderChange} maxSteps={5} />
+      </FixMe>
+      <ReactFlow
+        className="App"
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onNodeClick={onNodeClick}
+        fitView
+        fitViewOptions={fitViewOptions}
+      >
+        <Controls />
+        {/*// @ts-ignore*/}
+        {/*<Background variant="dots" color="#000" gap={16} />*/}
+      </ReactFlow>
+    </>
   )
 }
 

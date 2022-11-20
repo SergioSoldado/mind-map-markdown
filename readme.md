@@ -6,9 +6,8 @@ This is a tool to convert markdown files to a realtime mind map. Markdown has be
 
 I want to version this project's planning along with its sources as an experiment. It seems like a good idea to be using it as a test bed.
 
-- [x] Open markdown file (in code for now) when you click on the corresponding node in the mind map.
 - [x] Support clicking on markdown elements and opening file in that line
-- [ ] Support depth of markdown headers
+- [x] Support depth of markdown headers
 - [ ] Support click expand/collapse of markdown headers
 - [ ] Support auto resize of window (currently you have to click on "fit view" control)
 - [ ] Send back position to mind map when user clicks on a node and save that position
@@ -21,6 +20,7 @@ I want to version this project's planning along with its sources as an experimen
 - [ ] Maybe use electron or native. I love KDE so maybe a KDE app.
 - [ ] Maybe support serialization of the mind map to github compatible format.
 - [ ] Maybe git history back'n'forth.
+- [ ] Bug: what if you have equal headers in different lines, click to line will go to first encountered, you'll have to go up to parent or something. Maybe just ignore this
 
 ## Usage
 
