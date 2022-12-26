@@ -16,7 +16,9 @@ import axios from 'axios'
 import { io } from 'socket.io-client'
 import 'reactflow/dist/style.css'
 import Slider from './components/Slider'
+import Select from './components/Select'
 import './App.css'
+import { GraphOptions } from './api'
 
 import styled from 'styled-components'
 
@@ -31,13 +33,10 @@ const fitViewOptions: FitViewOptions = {
   padding: 0.2,
 }
 
-interface GraphControls {
-  depth: number
-}
-
 function App() {
-  const [controls, setControls] = useState<GraphControls>({
+  const [controls, setControls] = useState<GraphOptions>({
     depth: 2,
+    layout: 'spring',
   })
   const [nodes, setNodes] = useState<Node[]>([])
   const [edges, setEdges] = useState<Edge[]>([])
@@ -108,6 +107,11 @@ function App() {
     setControls({ ...controls, depth: value })
   }
 
+  const onLayoutChange = (value: string) => {
+    console.log(value)
+    setControls({ ...controls, layout: value })
+  }
+
   useEffect(() => {
     axios.post('http://localhost:5000/graph/controls', controls).then(null)
   }, [controls])
@@ -115,6 +119,19 @@ function App() {
   return (
     <>
       <FixMe>
+        <Select
+          label="layout"
+          options={[
+            'spring',
+            'kamada_kawai',
+            'circular',
+            'bipartite',
+            'spectral',
+            'shell',
+            'fruchterman_reingold',
+          ]}
+          onEvent={onLayoutChange}
+        />
         <Slider onEvent={onSliderChange} maxSteps={5} />
       </FixMe>
       <ReactFlow

@@ -10,7 +10,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 
-from mmm.markdown import make_graph, graph_to_react_flow, GraphControls
+from mmm.markdown import make_graph, graph_to_react_flow, GraphOptions
 from mmm.util import find_line_in_file
 
 logging.basicConfig(level=logging.DEBUG)
@@ -19,22 +19,21 @@ _this_dir = Path(__file__).parent
 app = Flask(__name__, instance_relative_config=True)
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*")
-_graph_controls = GraphControls()
+_graph_opt = None
 force_emit = False
 
 
 def create_graph():
-    global _markdown_root, _graph_controls
-    g = make_graph(_markdown_root, graph_controls=_graph_controls)
-    return graph_to_react_flow(g)
+    global _graph_opt
+    g = make_graph(opt=_graph_opt)
+    return graph_to_react_flow(g=g, opt=_graph_opt)
 
 
 def task():
     """
     Watch for changes in the root directory and emit a graph to the client
     """
-    assert _markdown_root.is_dir()
-    i = inotify.adapters.InotifyTree(str(_markdown_root))
+    i = inotify.adapters.InotifyTree(str(root_dir))
     while True:
         for event in i.event_gen(yield_nones=False):
             (_, type_names, path, filename) = event
@@ -50,9 +49,9 @@ def graph_controls():
     """
     Endpoint to set custom controls that control graph layout, depth, etc
     """
-    global _graph_controls, force_emit
-    _graph_controls = GraphControls.from_dict(request.json)
-    log.debug(f"Changed depth to {_graph_controls.depth}")
+    global _graph_opt, force_emit
+    _graph_opt.update(**request.json)
+    log.debug(f"Graph options: {_graph_opt.to_json(indent=2)}")
     socketio.emit("graph", create_graph())
     return "", 201
 
@@ -75,13 +74,13 @@ def clicked():
     for node in g["nodes"]:
         if node["id"] == content["id"]:
             log.debug(f'Found {node["id"]}')
-            f_path = _markdown_root / node["id"]
+            f_path = root_dir / node["id"]
             if f_path.is_file():
                 log.debug(f"Opening {f_path}")
                 subprocess.call(f"pycharm {f_path.absolute()}", shell=True)
             else:
                 file, line = content["id"].split("#")
-                f_path = _markdown_root / file
+                f_path = root_dir / file
                 line = rf"^ *# *{line}"
                 line = find_line_in_file(f_path, line)
                 log.debug(f"Opening {f_path}:{line}")
@@ -95,7 +94,7 @@ def clicked():
 @socketio.on("connect")
 def connect():
     log.debug(f"Client connected {request.sid}")
-    assert _markdown_root.is_dir, f"{_markdown_root} is not a directory"
+    assert _graph_opt.root_dir.is_dir, f"{root_dir} is not a directory"
     emit("graph", create_graph())
 
 
@@ -111,11 +110,13 @@ if __name__ == "__main__":
     parser.add_argument("--root-dir", type=Path, required=True)
     args = parser.parse_args()
 
-    _markdown_root = args.root_dir.resolve().absolute()
-    assert _markdown_root.is_dir(), f"{_markdown_root} is not a directory"
+    root_dir = args.root_dir.resolve().absolute()
+    assert root_dir.is_dir(), f"{root_dir} is not a directory"
     assert (
-        _this_dir not in _markdown_root.parents
-    ), f"{_markdown_root} can't be a subdirectory of project root"
+        _this_dir not in root_dir.parents
+    ), f"{root_dir} can't be a subdirectory of project root"
+
+    _graph_opt = GraphOptions(root_dir=root_dir)
 
     thread = Thread(target=task)
     thread.start()

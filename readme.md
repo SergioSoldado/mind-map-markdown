@@ -8,11 +8,12 @@ I want to version this project's planning along with its sources as an experimen
 
 - [x] Support clicking on markdown elements and opening file in that line
 - [x] Support depth of markdown headers
+- [x] Add button to pick layout (dropdown with options, including manual which serializes and saves coordinates)
+- [ ] Improve crap rest API
 - [ ] Support click expand/collapse of markdown headers
-- [ ] Support auto resize of window (currently you have to click on "fit view" control)
+- [ ] Support auto resize of window (currently you have to click on "fit view" control, also for some layouts it doesn't work at all)
 - [ ] Send back position to mind map when user clicks on a node and save that position
-- [ ] Start feeding back project documentation into the mind map (dunno what content it would have, maybe a features showcase)
-- [ ] Add button to set auto layout (dropdown with options)
+- [ ] Start feeding back project documentation into the mind map (dunno what content it would have, maybe a features showcase/story-book-esque)
 - [ ] Support other editors besides pycharm (all jetbrains?)
 - [ ] Use docker for testing (local CI)
 - [ ] Acceptable theme for the mind map.
